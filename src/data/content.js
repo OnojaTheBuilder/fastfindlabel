@@ -40,7 +40,7 @@ export const C = {
       { name: "Home", x: 275, y: 40, tip: "Your phone is back home." }
     ]
   },
-  email: "fastfindlabel@gmail.com",
+  email: "info@fastfindlabel.com",
   foot: "©2026 RFR FastFindLabel",
   // Paste Bob's live PayPal Client ID here (never the secret). Until then checkout stays closed.
   paypalClientId: "[PayPal client ID]"

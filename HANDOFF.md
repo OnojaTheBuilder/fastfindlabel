@@ -12,7 +12,7 @@ Paste this whole file into a new chat and attach the project zip. Then ask the n
 - Website fee: **$250, paid in full by Bob** (a discounted first-project price).
 - Domain **fastfindlabel.com** (about $15 a year) and hosting (about $120 a year, my estimate, verify against the real plan): **$135 total, due when Bob is paid around November 25** (his 4th Wednesday). He could not pay earlier; do not pressure him. I will send exact payment details then.
 - The domain must end up in **Bob's name**. I may register it first and transfer it after he reimburses me.
-- Business email (about $8 a month) is **optional and not chosen**. Bob uses Gmail: **fastfindlabel@gmail.com** (confirmed twice). Mail sent from a Gmail address often lands in spam, so use a transactional email service for order emails.
+- Business email **info@fastfindlabel.com** is live (Purelymail, DNS on Cloudflare) and forwards to Bob's Gmail **fastfindlabel@gmail.com**, so he checks one inbox. info@ is now on the labels and the site. For order emails, use a transactional email service sending from the domain.
 - Second site **cellfindnow.com** with cellfindnow@gmail.com, same design and same PayPal: offered at **$250, to be built later** (December or next year), after the first site sells. Not started.
 - Prices before shipping: **2 labels $10, 4 labels $18, 6 labels $25**. The 4 and 6 prices are MY proposals and still need Bob's confirmation. Shipping is a **flat $3 per order**, any size. Delivery text: "Please allow 5 to 7 days for delivery."
 - One PayPal **Business** account is enough for both sites. Bob will set it up once the site is live (PayPal wants a website). I need only his **Client ID** (never his password).
@@ -25,22 +25,22 @@ Bob asked for the simplest possible site. It is ONE page, in this order:
 4. Under "Get My Labels", in smaller letters: "(Shipping To USA only.)" and "Please allow 5 to 7 days for delivery."
 5. Quantity choices as a radio list: "2 labels $10 + $3 shipping", "4 labels $18 + $3 shipping", "6 labels $25 + $3 shipping". Shipping is otherwise shown only at checkout, as "$10 + $3 shipping = $13".
 6. Checkout: phone number to print (US, 10 digits, formatted as typed; hint says NOT the number of the phone being labeled), name, email, street, Apt/Suite (optional), city, state, ZIP. Apt shows on the same line as the street. Pay with PayPal.
-7. Footer: "Contact:" with fastfindlabel@gmail.com as a **blue underlined mailto link**, and "©2026 RFR FastFindLabel".
+7. Footer: "Contact:" with info@fastfindlabel.com as a **blue underlined mailto link**, and "©2026 RFR FastFindLabel".
 - **The map:** clicking the tagline opens a dialog with a small route map and six stops (coffee, grocery, gym, car, park, home), Back/Next buttons, a moving phone dot and a short tip per stop. It is the only extra Bob wanted back.
 - Removed on purpose: intro animation, drag-the-label toy, guide, FAQ, extra pages, feature boxes, statistics, reviews, trust strip, sticky buy bar. Never mention lanyards, key tags or keys.
 - Bob was happy: "This site is sooo easy to understand and generate sales."
 
 ## 4. Label spec (the physical product)
-Horizontal sticker, three centered lines, straight:
+Horizontal sticker, 14 x 40 mm, three centered lines, straight (exactly as in Bob's Nelko template):
 ```
-If found, call (555) 555-5555
-fastfindlabel@gmail.com
-©2026 RFR FastFindLabel
+if found, call 555-555-5555
+info@fastfindlabel.com
+© 2026 RFR fastfindlabel
 ```
-Only the number changes per customer. Customer emails are never printed. Bob's current photos still show the OLD email (cellfindnow@gmail.com); **new photos arrive in about a week** (he ran out of label tape). When they arrive: crop out anything personal, strip metadata, and replace `public/images/phone-back.jpg` and `phone-case.jpg`. (The old case photo showed a business card with part of an address; it is already cropped out.)
+Only the number changes per customer. Customer emails are never printed. The site photos were edited so the label text matches the template above (sample number 555-555-5555, no metadata). If Bob sends new real photos later: crop out anything personal, strip metadata, and replace `public/images/phone-back.jpg` and `phone-case.jpg`. (The old case photo showed a business card with part of an address; it is already cropped out.)
 
 ## 5. Technical state
-- **Stack:** Astro 5 static site in a GitHub repo, deployed on Vercel. Earlier preview: https://fastfindlabels.vercel.app/ . No database yet.
+- **Stack:** Astro 5 static site in GitHub (OnojaTheBuilder/fastfindlabel), deployed on **Cloudflare Pages (free plan)** at https://fastfindlabel.com (domain registered at Hostinger, nameservers on Cloudflare). Vercel is no longer used. No database yet.
 - **Files:** `src/pages/index.astro` (the whole page), `src/layouts/Base.astro` (head, footer, script), `src/data/content.js` (ALL text, prices, shipping, map stops, email, PayPal client ID placeholder), `src/scripts/client.js` (price total, phone formatting, demo or PayPal checkout, map dialog), `src/styles/global.css` (light paper-green background, mint, sky, yellow, navy text; Fraunces headings, Figtree body; focus styles; reduced-motion respected), `public/images/` (two photos), `README.md`.
 - **What was tested:** I could not install Astro in my earlier chat (no network). I generated a static copy of the same page and ran it in a headless browser at desktop and phone sizes: totals update, number formatting, demo order, map opens, steps to stop 6 and closes, no console errors, no sideways scroll. **The Astro files themselves have not been built by me.**
 - **Known problem:** the latest Vercel deployment **failed** and I have not seen the build log. A possible cause is leftover old files in the GitHub repo (the old `guide.astro`, `faq.astro`, `contact.astro`, `order.astro` and `src/components/Label.astro` should be deleted; `src/pages/` should hold only `index.astro`). First action: get the build log (Vercel, Deployments, the failed one, Build Logs, or `npx vercel inspect <id> --logs`), fix the real error, and confirm a green deploy.
