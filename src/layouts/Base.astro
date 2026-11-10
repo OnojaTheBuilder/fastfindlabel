@@ -1,0 +1,21 @@
+---
+import '../styles/global.css';
+import { C } from '../data/content.js';
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>{C.brand}</title>
+<meta name="description" content="Adhesive, thermal-printed labels with the phone number of someone you trust, so a lost phone finds its way home." />
+<link rel="canonical" href="https://fastfindlabel.com/" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,900&family=Figtree:wght@400;500;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+<main><slot /></main>
+<footer><p>Contact: <a href={`mailto:${C.email}`}>{C.email}</a></p><p>{C.foot}</p></footer>
+<script>import '../scripts/client.js';</script>
+</body>
+</html>
