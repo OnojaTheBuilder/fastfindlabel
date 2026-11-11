@@ -43,5 +43,5 @@ export const C = {
   email: "info@fastfindlabel.com",
   foot: "©2026 RFR FastFindLabel",
   // Paste Bob's live PayPal Client ID here (never the secret). Until then checkout stays closed.
-  paypalClientId: "[PayPal client ID]"
+  paypalClientId: "BAAgETuPL-AuNbkzFtulOniCkdt-MfySg5NYT9DQbcufLOh4po8Q4kHemJs6roV8wXwoIEfZ8Mz4utee70"
 };
