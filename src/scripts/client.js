@@ -37,7 +37,7 @@ if (f) {
       }).render('#pp'))
       .catch(() => { btn.hidden = false; say(C.form.payError); });
   };
-  f.addEventListener('submit', (e) => { e.preventDefault(); if (live()) { if (!pp.hasChildNodes()) pay(); } else say(fill(C.form.notOpen, { email: C.email })); });
+  f.addEventListener('submit', (e) => { e.preventDefault(); if (C.ordersOpen && live()) { if (!pp.hasChildNodes()) pay(); } else say(fill(C.form.notOpen, { email: C.email })); });
 }
 
 // Map dialog opened from the tagline

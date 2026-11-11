@@ -42,6 +42,9 @@ export const C = {
   },
   email: "info@fastfindlabel.com",
   foot: "©2026 RFR FastFindLabel",
+  // ORDERS ON/OFF: set to true to take orders again, false to pause (the PayPal ID below stays saved).
+  ordersOpen: false,
+  pausedNote: "Orders open very soon. Questions? Email info@fastfindlabel.com.",
   // Paste Bob's live PayPal Client ID here (never the secret). Until then checkout stays closed.
   paypalClientId: "BAAgETuPL-AuNbkzFtulOniCkdt-MfySg5NYT9DQbcufLOh4po8Q4kHemJs6roV8wXwoIEfZ8Mz4utee70"
 };
