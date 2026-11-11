@@ -15,7 +15,7 @@ import { C } from '../data/content.js';
 </head>
 <body>
 <main><slot /></main>
-<footer><p>Contact: <a href={`mailto:${C.email}`}>{C.email}</a></p><p>{C.foot}</p></footer>
+<footer><div class="pol">{C.policies.map((p) => <details><summary>{p.t}</summary>{p.body.map((x) => <p>{x}</p>)}</details>)}<p class="upd">{C.policyNote}</p></div><p>Contact: <a href={`mailto:${C.email}`}>{C.email}</a></p><p>{C.foot}</p></footer>
 <script>import '../scripts/client.js';</script>
 </body>
 </html>
