@@ -1,4 +1,5 @@
 // All site text lives here. Edit the text between the quotes.
+const EMAIL = "info@fastfindlabel.com";
 export const C = {
   brand: "Fast Find Label",
   tagline: "Your Phone's way Home",
@@ -43,7 +44,30 @@ export const C = {
       { name: "Home", x: 275, y: 40, tip: "Your phone is back home." }
     ]
   },
-  email: "info@fastfindlabel.com",
+  email: EMAIL,
+  // Small fold-out notes at the bottom of the page (Returns wording approved by Bob, Nov 2026).
+  policyNote: "Last updated November 2026.",
+  policies: [
+    { t: "Shipping", body: [
+      "We ship to US addresses only. Shipping is a flat $3 per order, any size.",
+      "Labels are mailed by US Mail. Please allow 5 to 7 days for delivery."
+    ] },
+    { t: "Returns and refunds", body: [
+      "Each label is printed with the number you give us, so please check it carefully before you pay. Because labels are made to order, we can't take returns.",
+      "If your labels arrive damaged, or we printed the number wrong, notify us within 30 days and we will reprint them free."
+    ] },
+    { t: "Privacy", body: [
+      "We collect only what we need to make and mail your order: your name, email, shipping address and the phone number to print.",
+      "PayPal handles your payment. We never see your card details.",
+      "We use your details only to make, ship and answer questions about your order. We never sell them. Your name, email and address go only to PayPal (to take payment) and the postal service (to deliver). The phone number you give us is never shared.",
+      "We don't use advertising or tracking cookies. PayPal may use cookies when you pay.",
+      `To see or delete your details, email ${EMAIL}.`
+    ] },
+    { t: "Terms", body: [
+      "Prices are in US dollars. By ordering, you confirm the number on the label belongs to someone who agrees to be contacted, such as a relative or close friend.",
+      "The label helps a finder reach someone you trust. We can't promise a lost phone will be returned."
+    ] }
+  ],
   foot: "©2026 RFR FastFindLabel",
   pausedNote: "Orders open very soon. Questions? Email info@fastfindlabel.com."
 };
