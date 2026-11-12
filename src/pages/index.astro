@@ -12,6 +12,7 @@ const route = m.stops.map((s, i) => `${i ? 'L' : 'M'}${s.x} ${s.y}`).join(' ');
 <section id="order" class="get">
 <h2>{C.get}</h2>
 <p class="ship">{C.shipNote}<br />{C.delivery}</p>
+<p class="trust">{C.trust}</p>
 <p class="paused" id="paused" role="status" hidden>{C.pausedNote}</p>
 <form id="of">
 <fieldset><legend>{f.choose}</legend>{C.price.map((p, i) => <label class="opt"><input type="radio" name="pack" value={i} checked={i === 0} /> <span>{p.q} labels ${p.p} + ${C.shipping} shipping</span></label>)}</fieldset>

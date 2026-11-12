@@ -13,6 +13,8 @@ export const C = {
   get: "Get My Labels",
   shipNote: "(Shipping To USA only.)",
   delivery: "Please allow 5 to 7 days for delivery.",
+  // Short privacy promise shown under the delivery line. Bob asked for 2 to 3 short sentences.
+  trust: "Your privacy matters. The phone number you give us is used only to print your label. We never call, text, sell or share it.",
   // Prices are before shipping. Confirm the 4 and 6 label prices with Bob.
   price: [{ q: 2, p: 10 }, { q: 4, p: 18 }, { q: 6, p: 25 }],
   shipping: 3,

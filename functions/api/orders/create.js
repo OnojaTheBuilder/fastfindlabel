@@ -18,11 +18,11 @@ export async function onRequestPost({ request, env }) {
       application_context: { brand_name: C.brand, shipping_preference: 'SET_PROVIDED_ADDRESS', user_action: 'PAY_NOW' },
       purchase_units: [{
         reference_id: id, custom_id: id, invoice_id: id,
-        description: `FFL ${order.pack_q} labels | Print ${order.tel}`.slice(0, 127),
+        description: `${C.brand} - ${order.pack_q} labels`,
         amount: { currency_code: 'USD', value: total, breakdown: {
           item_total: { currency_code: 'USD', value: (order.total - C.shipping).toFixed(2) },
           shipping: { currency_code: 'USD', value: C.shipping.toFixed(2) } } },
-        items: [{ name: `${C.brand} - ${order.pack_q} labels`, description: `Print: ${order.tel}`, quantity: '1', category: 'PHYSICAL_GOODS',
+        items: [{ name: `${C.brand} - ${order.pack_q} labels`, quantity: '1', category: 'PHYSICAL_GOODS',
           unit_amount: { currency_code: 'USD', value: (order.total - C.shipping).toFixed(2) } }],
         shipping: { name: { full_name: order.name }, address: {
           address_line_1: order.street, ...(order.apt ? { address_line_2: order.apt } : {}),
