@@ -21,9 +21,26 @@ Then Custom domains > add fastfindlabel.com (and www) and follow the DNS steps s
 - All text, prices, map stops, email, PayPal ID: `src/data/content.js`.
 - Styles: `src/styles/global.css`. Behaviour: `src/scripts/client.js`.
 
-## PayPal
-Set `paypalClientId` in `src/data/content.js` to Bob's LIVE Client ID (never the secret). Until then
-the Pay button says checkout opens soon and takes no order.
-Each payment then appears in Bob's PayPal with the shipping address; the description holds pack size,
-number to print and customer email. The price is set in the browser for now, so Bob must check that the
-amount matches the pack before shipping. The server checkout in HANDOFF.md section 6 removes that risk.
+## Orders, payments and Bob's admin page
+- Checkout runs through Cloudflare Pages Functions in `functions/api/` (helpers in `server/`).
+  The server sets the price from `src/data/content.js`, creates the PayPal order, captures it and checks
+  the amount before an order counts as paid. Orders are saved in a Cloudflare D1 database (tables are created automatically).
+- Bob's page: `/admin/` (password login). Orders list, Not printed / Printed / Shipped tabs, Download Excel
+  (name | street+apt | "City ST" | ZIP, no header), Copy next 30 addresses, Mark printed / shipped / refunded,
+  Orders on/off switch and daily limit.
+
+### Cloudflare settings (Workers & Pages > fastfindlabel > Settings)
+Bindings: D1 database, variable name `DB` (one database for Production, a separate test one for Preview).
+Variables and Secrets (set for Production AND Preview separately):
+| Name | Production | Preview |
+|---|---|---|
+| `PAYPAL_ENV` | `live` | `sandbox` |
+| `PAYPAL_CLIENT_ID` | live app Client ID | sandbox app Client ID |
+| `PAYPAL_SECRET` (encrypt) | live app Secret | sandbox app Secret |
+| `ADMIN_PASSWORD` (encrypt) | Bob's password | a test password |
+After changing settings, redeploy (Deployments > ... > Retry deployment).
+Never put secrets in the code or in chat.
+
+### Opening and pausing orders
+Bob does it in `/admin/` (Open orders / Pause orders). The shop also stays closed if PayPal settings are missing
+or the daily limit is reached.

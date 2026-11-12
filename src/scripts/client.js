@@ -14,30 +14,42 @@ if (f) {
   const say = (t) => { done.textContent = t; done.hidden = false; done.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' }); };
   tn.addEventListener('input', () => { tn.value = fmt(tn.value); });
   f.addEventListener('change', upd); upd();
-  const live = () => /^[A-Za-z0-9_-]{20,}$/.test(C.paypalClientId || '');
+  const paused = $('#paused');
+  // Ask the server whether the shop is open (Bob's switch in /admin) and which PayPal ID to use.
+  let shop = { open: false, clientId: '' };
+  const status = fetch('/api/status', { cache: 'no-store' }).then((r) => r.json()).catch(() => ({ open: false }))
+    .then((s) => { shop = s; if (paused) paused.hidden = !!s.open; return s; });
 
-  // Note: the price is set in the browser. Until the server checkout (HANDOFF.md section 6) is built,
-  // Bob must check in PayPal that each payment matches the pack before he ships.
+  const post = (url, body) => fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
+    .then(async (r) => { const j = await r.json().catch(() => ({})); if (!r.ok || j.ok === false) { const e = new Error(j.error || C.form.payError); e.retry = j.retry; throw e; } return j; });
+
+  const loadSdk = (id) => new Promise((ok, no) => {
+    if (window.paypal) return ok();
+    const s = document.createElement('script');
+    s.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(id)}&currency=USD&intent=capture`;
+    s.onload = ok; s.onerror = no; document.head.append(s);
+  });
+
+  // The server sets the price and checks the payment; the browser only collects the form.
   const pay = () => {
     btn.hidden = true;
-    new Promise((ok, no) => { if (window.paypal) return ok(); const s = document.createElement('script'); s.src = `https://www.paypal.com/sdk/js?client-id=${C.paypalClientId}&currency=USD&intent=capture`; s.onload = ok; s.onerror = no; document.head.append(s); })
-      .then(() => paypal.Buttons({
-        onClick: (_, a) => (f.reportValidity() ? a.resolve() : a.reject()),
-        createOrder: (_, x) => { const d = data(); return x.order.create({
-          application_context: { shipping_preference: 'SET_PROVIDED_ADDRESS', brand_name: C.brand },
-          purchase_units: [{
-            description: `FFL x${pk().q} | Print ${d.tel} | ${d.email}`.slice(0, 127),
-            custom_id: d.tel,
-            amount: { currency_code: 'USD', value: total().toFixed(2) },
-            shipping: { name: { full_name: d.name }, address: { address_line_1: d.street, address_line_2: d.apt || undefined, admin_area_2: d.city, admin_area_1: d.state.toUpperCase(), postal_code: d.zip, country_code: 'US' } }
-          }]
-        }); },
-        onApprove: (_, x) => x.order.capture().then(() => { const d = data(); f.hidden = true; say(fill(C.form.thanks, { name: d.name, q: pk().q, tel: d.tel, total: total() })); }),
-        onError: () => say(C.form.payError)
-      }).render('#pp'))
-      .catch(() => { btn.hidden = false; say(C.form.payError); });
+    loadSdk(shop.clientId).then(() => paypal.Buttons({
+      onClick: (_, a) => (f.reportValidity() ? a.resolve() : a.reject()),
+      createOrder: () => post('/api/orders/create', data()).then((j) => j.id).catch((e) => { say(e.message); throw e; }),
+      onApprove: (d, a) => post('/api/orders/capture', { orderID: d.orderID })
+        .then((j) => { f.hidden = true; say(fill(C.form.thanks, { name: j.order.name, q: j.order.q, tel: j.order.tel, total: j.order.total })); })
+        .catch((e) => { if (e.retry) return a.restart(); say(e.message); }),
+      onCancel: () => say(C.form.cancelled),
+      onError: () => { if (!done.textContent) say(C.form.payError); }
+    }).render('#pp')).catch(() => { btn.hidden = false; say(C.form.payError); });
   };
-  f.addEventListener('submit', (e) => { e.preventDefault(); if (C.ordersOpen && live()) { if (!pp.hasChildNodes()) pay(); } else say(fill(C.form.notOpen, { email: C.email })); });
+  f.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    done.hidden = true; done.textContent = '';
+    const s = await status;
+    if (!s.open || !s.clientId) return say(fill(C.form.notOpen, { email: C.email }));
+    if (!pp.hasChildNodes()) pay();
+  });
 }
 
 // Map dialog opened from the tagline

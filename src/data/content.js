@@ -25,7 +25,8 @@ export const C = {
     total: "Order total", pay: "Pay with PayPal",
     thanks: "Thank you, {name}! Your order for {q} labels is paid. Number to print: {tel}. Total: ${total}. PayPal will email your receipt.",
     notOpen: "Checkout opens very soon. Nothing was charged and no order was placed. Questions? Email {email}.",
-    payError: "The payment did not go through. Nothing was charged. Please try again."
+    payError: "The payment did not go through. Nothing was charged. Please try again.",
+    cancelled: "Payment cancelled. Nothing was charged."
   },
   // The map that opens from the tagline. x and y are positions on a 300 x 180 map.
   map: {
@@ -42,9 +43,5 @@ export const C = {
   },
   email: "info@fastfindlabel.com",
   foot: "©2026 RFR FastFindLabel",
-  // ORDERS ON/OFF: set to true to take orders again, false to pause (the PayPal ID below stays saved).
-  ordersOpen: false,
-  pausedNote: "Orders open very soon. Questions? Email info@fastfindlabel.com.",
-  // Paste Bob's live PayPal Client ID here (never the secret). Until then checkout stays closed.
-  paypalClientId: "BAAgETuPL-AuNbkzFtulOniCkdt-MfySg5NYT9DQbcufLOh4po8Q4kHemJs6roV8wXwoIEfZ8Mz4utee70"
+  pausedNote: "Orders open very soon. Questions? Email info@fastfindlabel.com."
 };

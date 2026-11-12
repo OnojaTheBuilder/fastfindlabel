@@ -46,7 +46,7 @@ Only the number changes per customer. Customer emails are never printed. The sit
 - **Known problem:** the latest Vercel deployment **failed** and I have not seen the build log. A possible cause is leftover old files in the GitHub repo (the old `guide.astro`, `faq.astro`, `contact.astro`, `order.astro` and `src/components/Label.astro` should be deleted; `src/pages/` should hold only `index.astro`). First action: get the build log (Vercel, Deployments, the failed one, Build Logs, or `npx vercel inspect <id> --logs`), fix the real error, and confirm a green deploy.
 - **Placeholder:** `paypalClientId` in `content.js` is "[PayPal client ID]". Until it is a real ID, checkout is a demo that charges nothing.
 
-## 6. How the real payment and orders should work (not built yet)
+## 6. How the real payment and orders work (BUILT on branch `orders`, see README)
 Use PayPal Checkout with server-side order creation and capture. Never trust prices from the browser.
 1. Customer picks a pack and fills the form.
 2. `POST /api/orders/create`: the server validates everything, computes total = pack price + $3 from its own price list, creates the PayPal order (`custom_id` = our order id, description includes pack and trusted number), saves it as `pending`.
@@ -54,9 +54,9 @@ Use PayPal Checkout with server-side order creation and capture. Never trust pri
 4. Backup: `POST /api/paypal/webhook` (PAYMENT.CAPTURE.COMPLETED, signature verified).
 5. Secrets (PayPal Client ID and Secret, admin password, email key) in Vercel environment variables. `PAYPAL_ENV=sandbox|live`; an env-flagged $1 test pack for Bob's live test (he refunds it).
 6. Storage: a small database through Vercel's marketplace (for example Upstash Redis or Neon Postgres). Per order: id, createdAt, status (pending, paid, printed, shipped, refunded), pack, quantity, trusted number, name, email, street with Apt, city, state, ZIP, total, paypalOrderId, site. No card data is stored. Add validation, rate limits and a privacy policy.
-7. Needs the `@astrojs/vercel` adapter and `export const prerender = false` on API endpoints.
+7. Built as Cloudflare Pages Functions (`functions/`) + D1, not Vercel. Astro stays fully static.
 
-## 7. Owner page for Bob (not built yet)
+## 7. Owner page for Bob (BUILT: /admin/, see README)
 Private `/admin/` page (password login, secure cookie, noindex, unlinked, works on a phone):
 - List of paid orders, newest first, with status; filter "not yet printed".
 - **Download Excel**, no limit on rows, **exactly like Bob's sample**: no header row, no blank rows; column A name, B street (with Apt on the same line), C "City State" (for example "Tiffin OH"), D ZIP stored as text. Bob tested his address-label app with that layout; **no blank line between addresses is needed**.

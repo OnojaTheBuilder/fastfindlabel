@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Orders · Fast Find Label</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<style>
+:root{--bg:#F3F8EE;--card:#fff;--mint:#BFEBD3;--sky:#BDE0FF;--sun:#FFD84D;--ink:#13294B;--mut:#46587A;--red:#b42318;--ok:#0f7b4f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:52rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.4rem;margin:.2rem 0 1rem;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.badge{font-size:.75rem;font-weight:800;background:var(--sun);border-radius:99px;padding:.2rem .6rem;letter-spacing:.03em}
+.badge.live{background:var(--mint)}
+button,.btn{font:inherit;font-weight:700;border:2px solid var(--ink);background:var(--ink);color:#fff;border-radius:12px;padding:.6rem 1rem;cursor:pointer;text-decoration:none;display:inline-block}
+button.ghost,.btn.ghost{background:#fff;color:var(--ink)}
+button.small{padding:.35rem .7rem;font-size:.9rem;border-radius:10px}
+button.link{background:none;border:0;color:var(--mut);text-decoration:underline;padding:.3rem;font-weight:500}
+button:disabled{opacity:.45;cursor:default}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #2563eb;outline-offset:2px}
+input{font:inherit;padding:.6rem .7rem;border:2px solid var(--ink);border-radius:10px;background:#fff;color:var(--ink)}
+.panel{background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:1rem;margin:0 0 1rem}
+.row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.spread{justify-content:space-between}
+.shop{font-weight:800;font-size:1.05rem}
+.shop .dot{display:inline-block;width:.8rem;height:.8rem;border-radius:50%;margin-right:.4rem;vertical-align:middle;background:var(--red)}
+.shop.open .dot{background:var(--ok)}
+.tabs{display:flex;gap:.4rem;overflow-x:auto;padding-bottom:.3rem;margin:0 0 .8rem}
+.tabs button{background:#fff;color:var(--ink);white-space:nowrap;padding:.45rem .8rem}
+.tabs button[aria-pressed=true]{background:var(--ink);color:#fff}
+.order{background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:.9rem 1rem;margin:0 0 .8rem}
+.order.check{border-color:var(--red)}
+.tel{font-size:clamp(1.7rem,7vw,2.3rem);font-weight:900;letter-spacing:.01em;margin:.1rem 0 .3rem;font-variant-numeric:tabular-nums}
+.meta{color:var(--mut);font-size:.9rem}
+.pack{font-weight:800;background:var(--sky);border-radius:8px;padding:.1rem .5rem}
+.addr{margin:.5rem 0}
+.status{font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.04em}
+.warn{background:#fde8e6;color:var(--red);border-radius:10px;padding:.5rem .7rem;font-weight:700;margin:.5rem 0}
+.note{background:var(--sun);border-radius:12px;padding:.7rem 1rem;font-weight:700;margin:0 0 1rem}
+.msg{min-height:1.4em;color:var(--mut);margin:.4rem 0 0}
+.empty{color:var(--mut);text-align:center;padding:2rem 0}
+textarea{width:100%;min-height:8rem;font:14px/1.4 ui-monospace,monospace;border:2px solid var(--ink);border-radius:10px;padding:.5rem}
+label.cap{display:flex;align-items:center;gap:.4rem;font-weight:600}
+label.cap input{width:5.5rem}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+  <section id="login" hidden>
+    <h1>Fast Find Label · Orders</h1>
+    <form id="loginForm" class="panel">
+      <label for="pw"><strong>Password</strong></label>
+      <div class="row" style="margin-top:.5rem"><input id="pw" type="password" autocomplete="current-password" required style="flex:1;min-width:12rem" /><button type="submit">Log in</button></div>
+      <p class="msg" id="loginMsg" role="alert"></p>
+    </form>
+  </section>
+
+  <section id="app" hidden>
+    <h1>Orders <span class="badge" id="envBadge"></span><span style="flex:1"></span><button class="link" id="logout" type="button">Log out</button></h1>
+
+    <div class="panel">
+      <div class="row spread">
+        <div class="shop" id="shopState"><span class="dot"></span><span id="shopText"></span></div>
+        <button type="button" id="toggleShop" class="small"></button>
+      </div>
+      <div class="row" style="margin-top:.7rem">
+        <label class="cap">Daily limit <input id="cap" type="number" min="0" inputmode="numeric" /> <span class="meta">(0 = no limit)</span></label>
+        <button type="button" id="saveCap" class="small ghost">Save</button>
+        <span class="meta" id="todayCount"></span>
+      </div>
+    </div>
+
+    <div class="tabs" role="group" aria-label="Show orders">
+      <button type="button" data-f="unprinted">Not printed</button>
+      <button type="button" data-f="printed">Printed</button>
+      <button type="button" data-f="shipped">Shipped</button>
+      <button type="button" data-f="check" hidden>Check</button>
+      <button type="button" data-f="refunded">Refunded</button>
+      <button type="button" data-f="all">All</button>
+    </div>
+
+    <div class="panel" id="tools">
+      <div class="row">
+        <button type="button" id="copy30">Copy next 30 addresses</button>
+        <a class="btn ghost" id="excel" href="#">Download Excel</a>
+      </div>
+      <div id="batch" hidden style="margin-top:.8rem">
+        <p style="margin:.2rem 0 .6rem"><strong id="batchText"></strong></p>
+        <div class="row">
+          <button type="button" id="markBatch">Mark these printed</button>
+          <a class="btn ghost" id="excelBatch" href="#">Excel of these</a>
+          <button type="button" class="link" id="cancelBatch">Cancel</button>
+        </div>
+        <div id="copyFallback" hidden style="margin-top:.6rem">
+          <p class="meta">Copying was blocked. Select all the text below and copy it:</p>
+          <textarea id="copyText" readonly></textarea>
+        </div>
+      </div>
+      <p class="msg" id="toolMsg" role="status" aria-live="polite"></p>
+    </div>
+
+    <div id="list" aria-live="polite"></div>
+  </section>
+</main>
+<script src="/admin/admin.js" defer></script>
+</body>
+</html>
