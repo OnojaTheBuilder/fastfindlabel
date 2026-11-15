@@ -49,7 +49,7 @@ export const C = {
   policyNote: "Last updated November 2026.",
   policies: [
     { t: "Shipping", body: [
-      "We ship to US addresses only. Shipping is a flat $3 per order, any size.",
+      "We ship to US addresses only. Shipping is $3 per order, any size.",
       "Labels are mailed by US Mail. Please allow 5 to 7 days for delivery."
     ] },
     { t: "Returns and refunds", body: [
