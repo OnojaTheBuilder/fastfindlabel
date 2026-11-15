@@ -42,4 +42,4 @@ export function xlsx(rows, widths = []) {
 }
 
 // One row per order, exactly like Bob's sample: name | street (with apt) | "City ST" | ZIP. No header.
-export const addressRow = (o) => [o.name, [o.street, o.apt].filter(Boolean).join(' '), `${o.city} ${o.state}`, o.zip];
+export const addressRow = (o) => [o.facility ? `${o.name}, ${o.facility}` : o.name, [o.street, o.apt].filter(Boolean).join(' '), `${o.city} ${o.state}`, o.zip];

@@ -11,7 +11,7 @@
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const money = (n) => `$${Number(n).toFixed(2)}`;
   const when = (iso) => iso ? new Date(iso).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : '';
-  const addrRow = (o) => [o.name, [o.street, o.apt].filter(Boolean).join(' '), `${o.city} ${o.state}`, o.zip];
+  const addrRow = (o) => [o.facility ? `${o.name}, ${o.facility}` : o.name, [o.street, o.apt].filter(Boolean).join(' '), `${o.city} ${o.state}`, o.zip];
   const show = (id) => { $('#login').hidden = id !== 'login'; $('#app').hidden = id !== 'app'; if (id === 'login') $('#pw').focus(); };
 
   let filter = 'unprinted', data = null, batch = [];
@@ -46,10 +46,10 @@
     if (!data.orders.length) { L.innerHTML = `<p class="empty">${filter === 'unprinted' ? 'All caught up. No orders waiting to print.' : 'No orders here yet.'}</p>`; return; }
     L.innerHTML = data.orders.map((o) => `
       <article class="order${o.status === 'check' ? ' check' : ''}" data-id="${esc(o.id)}">
-        <div class="row spread"><span class="pack">${o.pack_q} labels</span><span class="status">${esc(label(o.status))}</span></div>
+        <div class="row spread"><span><span class="pack">${o.pack_q} labels</span>${o.facility ? ' <span class="fac">Care facility</span>' : ''}</span><span class="status">${esc(label(o.status))}</span></div>
         <div class="tel">${esc(o.tel)}</div>
         ${o.status === 'check' ? '<p class="warn">Payment amount did not match. Check this payment in PayPal before shipping.</p>' : ''}
-        <div class="addr"><strong>${esc(o.name)}</strong><br>${esc([o.street, o.apt].filter(Boolean).join(' '))}<br>${esc(o.city)} ${esc(o.state)} ${esc(o.zip)}</div>
+        <div class="addr"><strong>${esc(o.name)}</strong><br>${o.facility ? `${esc(o.facility)}<br>` : ''}${esc([o.street, o.apt].filter(Boolean).join(' '))}<br>${esc(o.city)} ${esc(o.state)} ${esc(o.zip)}</div>
         <div class="meta">${esc(o.email)} · ${money(o.total)} · ${when(o.paid_at || o.created_at)} · ${esc(o.id)}</div>
         <div class="row" style="margin-top:.6rem">${actions(o)}</div>
       </article>`).join('');

@@ -20,12 +20,12 @@ export async function onRequestPost({ request, env }) {
         reference_id: id, custom_id: id, invoice_id: id,
         description: `${C.brand} - ${order.pack_q} labels`,
         amount: { currency_code: 'USD', value: total, breakdown: {
-          item_total: { currency_code: 'USD', value: (order.total - C.shipping).toFixed(2) },
-          shipping: { currency_code: 'USD', value: C.shipping.toFixed(2) } } },
+          item_total: { currency_code: 'USD', value: (order.total - order.shipping).toFixed(2) },
+          shipping: { currency_code: 'USD', value: order.shipping.toFixed(2) } } },
         items: [{ name: `${C.brand} - ${order.pack_q} labels`, quantity: '1', category: 'PHYSICAL_GOODS',
-          unit_amount: { currency_code: 'USD', value: (order.total - C.shipping).toFixed(2) } }],
+          unit_amount: { currency_code: 'USD', value: (order.total - order.shipping).toFixed(2) } }],
         shipping: { name: { full_name: order.name }, address: {
-          address_line_1: order.street, ...(order.apt ? { address_line_2: order.apt } : {}),
+          address_line_1: order.facility ? `${order.facility}, ${order.street}`.slice(0, 300) : order.street, ...(order.apt ? { address_line_2: order.apt } : {}),
           admin_area_2: order.city, admin_area_1: order.state, postal_code: order.zip, country_code: 'US' } }
       }]
     }, id);
@@ -34,10 +34,10 @@ export async function onRequestPost({ request, env }) {
       return fail('PayPal could not start the payment. Please check your address and try again.', 502);
     }
     const d = await db(env);
-    await d.prepare(`INSERT INTO orders (id, created_at, day, status, pack_q, total, tel, name, email, street, apt, city, state, zip, paypal_order_id, site)
-      VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+    await d.prepare(`INSERT INTO orders (id, created_at, day, status, pack_q, total, tel, name, email, street, apt, city, state, zip, paypal_order_id, site, facility)
+      VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
       .bind(id, new Date().toISOString(), today(), order.pack_q, order.total, order.tel, order.name, order.email,
-        order.street, order.apt, order.city, order.state, order.zip, pp.data.id, 'fastfindlabel').run();
+        order.street, order.apt, order.city, order.state, order.zip, pp.data.id, 'fastfindlabel', order.facility || null).run();
     return json({ ok: true, id: pp.data.id });
   } catch (e) {
     console.log('create error', e && e.stack);

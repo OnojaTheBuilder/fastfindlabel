@@ -25,12 +25,13 @@ export async function db(env) {
         id TEXT PRIMARY KEY, created_at TEXT NOT NULL, paid_at TEXT, day TEXT, status TEXT NOT NULL,
         pack_q INTEGER NOT NULL, total REAL NOT NULL, tel TEXT NOT NULL, name TEXT NOT NULL, email TEXT NOT NULL,
         street TEXT NOT NULL, apt TEXT, city TEXT NOT NULL, state TEXT NOT NULL, zip TEXT NOT NULL,
-        paypal_order_id TEXT, capture_id TEXT, site TEXT, printed_at TEXT, shipped_at TEXT)`),
+        paypal_order_id TEXT, capture_id TEXT, site TEXT, printed_at TEXT, shipped_at TEXT, facility TEXT)`),
       env.DB.prepare('CREATE INDEX IF NOT EXISTS orders_status ON orders(status, created_at)'),
       env.DB.prepare('CREATE INDEX IF NOT EXISTS orders_pp ON orders(paypal_order_id)'),
       env.DB.prepare('CREATE TABLE IF NOT EXISTS settings (k TEXT PRIMARY KEY, v TEXT)'),
       env.DB.prepare('CREATE TABLE IF NOT EXISTS hits (k TEXT PRIMARY KEY, n INTEGER, reset INTEGER)')
     ]);
+    try { await env.DB.prepare('ALTER TABLE orders ADD COLUMN facility TEXT').run(); } catch (e) { /* already there */ }
     ready = true;
   }
   return env.DB;
@@ -88,15 +89,19 @@ export function validateOrder(b) {
   if (!(pack >= 0 && pack < PACKS.length)) return { error: 'Please choose a pack.' };
   const digits = String(b.tel ?? '').replace(/\D/g, '');
   if (digits.length !== 10 || /^[01]/.test(digits)) return { error: 'Please enter a 10-digit US phone number to print.' };
+  const facility = b.facility === '1' || b.facility === true;
   const o = {
     pack_q: PACKS[pack].q,
-    total: PACKS[pack].p + SHIPPING,
+    facility: facility ? str(b.facilityName, 100) : '',
+    shipping: facility ? 0 : SHIPPING,
+    total: PACKS[pack].p + (facility ? 0 : SHIPPING),
     tel: `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`,
     name: str(b.name, 80), email: str(b.email, 120).toLowerCase(),
     street: str(b.street, 100), apt: str(b.apt, 40), city: str(b.city, 60),
     state: str(b.state, 2).toUpperCase(), zip: str(b.zip, 5)
   };
   if (o.name.length < 2) return { error: 'Please enter your name.' };
+  if (facility && o.facility.length < 2) return { error: 'Please enter the facility name.' };
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(o.email)) return { error: 'Please enter a valid email.' };
   if (o.street.length < 3) return { error: 'Please enter your street address.' };
   if (o.city.length < 2) return { error: 'Please enter your city.' };

@@ -8,8 +8,23 @@ if (f) {
   const tn = $('#tn'), tot = $('#tot'), done = $('#done'), btn = f.querySelector('button[type=submit]'), pp = $('#pp');
   const fmt = (v) => { const d = v.replace(/\D/g, '').slice(0, 10); return d.length > 6 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : d.length > 3 ? `(${d.slice(0, 3)}) ${d.slice(3)}` : d; };
   const pk = () => C.price[+f.pack.value];
-  const total = () => pk().p + C.shipping;
-  const upd = () => { tot.textContent = `$${pk().p} + $${C.shipping} shipping = $${total()}`; };
+  let fac = false;
+  const ship = () => (fac ? 0 : C.shipping);
+  const total = () => pk().p + ship();
+  const upd = () => { tot.textContent = fac ? `$${total()} (${C.facility.noShip})` : `$${pk().p} + $${C.shipping} shipping = $${total()}`; };
+  // Care facility mode: no shipping charge, facility name required.
+  const facBtn = $('#facToggle');
+  if (facBtn) facBtn.addEventListener('click', () => {
+    fac = !fac;
+    $('#facFlag').value = fac ? '1' : '';
+    $('#facNote').hidden = !fac; $('#facNameWrap').hidden = !fac; $('#facName').required = fac;
+    $('#aptLabel').textContent = fac ? C.facility.apt : C.form.apt;
+    facBtn.textContent = fac ? C.facility.back : C.facility.link;
+    facBtn.setAttribute('aria-pressed', String(fac));
+    for (const s of f.querySelectorAll('.opt span[data-q]')) s.textContent = fac ? `${s.dataset.q} labels $${s.dataset.p} (${C.facility.noShip})` : `${s.dataset.q} labels $${s.dataset.p} + $${C.shipping} shipping`;
+    upd();
+    if (fac) $('#facName').focus();
+  });
   const data = () => Object.fromEntries(new FormData(f));
   const say = (t) => { done.textContent = t; done.hidden = false; done.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' }); };
   tn.addEventListener('input', () => { tn.value = fmt(tn.value); });

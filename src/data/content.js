@@ -19,6 +19,15 @@ export const C = {
   // Prices are before shipping. Confirm the 4 and 6 label prices with Bob.
   price: [{ q: 2, p: 10 }, { q: 4, p: 18 }, { q: 6, p: 25 }],
   shipping: 3,
+  // Nursing homes and senior care facilities: no shipping charge, facility name required.
+  facility: {
+    link: "If you are in a Nursing Home or Senior Care Facility, click here",
+    back: "Not in a care facility? Click here",
+    note: "No shipping charge for Nursing Homes and Senior Care Facilities. Please enter the facility's name and address.",
+    name: "Facility name",
+    apt: "Room/Apt (optional)",
+    noShip: "no shipping"
+  },
   form: {
     choose: "Choose your labels",
     tel: "Phone number to print on the label",
