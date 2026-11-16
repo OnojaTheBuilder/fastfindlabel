@@ -11,7 +11,19 @@
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const money = (n) => `$${Number(n).toFixed(2)}`;
   const when = (iso) => iso ? new Date(iso).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : '';
-  const addrRow = (o) => [o.facility ? `${o.name}, ${o.facility}` : o.name, [o.street, o.apt].filter(Boolean).join(' '), `${o.city} ${o.state}`, o.zip];
+  // USPS street-suffix and unit abbreviations (Publication 28). Only the street-type word is shortened,
+  // never the street's own name: "814 Oakview Drive" -> "814 Oakview Dr", but "12 Court Street" -> "12 Court St".
+  const SUFFIX = { avenue: 'Ave', boulevard: 'Blvd', circle: 'Cir', court: 'Ct', drive: 'Dr', expressway: 'Expy', freeway: 'Fwy', highway: 'Hwy', lane: 'Ln', parkway: 'Pkwy', place: 'Pl', plaza: 'Plz', road: 'Rd', square: 'Sq', street: 'St', terrace: 'Ter', trail: 'Trl', turnpike: 'Tpke', crossing: 'Xing', point: 'Pt', ridge: 'Rdg', heights: 'Hts', mountain: 'Mtn', center: 'Ctr', village: 'Vlg', ave: 'Ave', av: 'Ave', blvd: 'Blvd', cir: 'Cir', ct: 'Ct', dr: 'Dr', hwy: 'Hwy', ln: 'Ln', pkwy: 'Pkwy', pl: 'Pl', rd: 'Rd', st: 'St', ter: 'Ter', trl: 'Trl' };
+  const UNIT = { apartment: 'Apt', apt: 'Apt', room: 'Rm', rm: 'Rm', suite: 'Ste', ste: 'Ste', building: 'Bldg', bldg: 'Bldg', floor: 'Fl', fl: 'Fl', unit: 'Unit', department: 'Dept', lot: 'Lot', space: 'Spc', trailer: 'Trlr' };
+  const clean = (s) => String(s || '').replace(/\./g, '').replace(/\s+/g, ' ').trim();
+  const shortStreet = (s) => {
+    const t = clean(s).split(' ');
+    // last suffix word, but never the first word of the street name (t[0] is usually the house number)
+    for (let i = t.length - 1; i >= 2; i--) { const k = t[i].toLowerCase(); if (SUFFIX[k]) { t[i] = SUFFIX[k]; break; } }
+    return t.join(' ');
+  };
+  const shortUnit = (s) => clean(s).split(' ').map((w) => UNIT[w.toLowerCase()] || w).join(' ');
+  const addrRow = (o) => [o.name, [shortStreet(o.street), shortUnit(o.apt)].filter(Boolean).join(' '), `${o.city} ${o.state}`, o.zip];
   const show = (id) => { $('#login').hidden = id !== 'login'; $('#app').hidden = id !== 'app'; if (id === 'login') $('#pw').focus(); };
 
   let filter = 'unprinted', data = null, batch = [];
