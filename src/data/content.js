@@ -45,12 +45,12 @@ export const C = {
     title: "Your Phone's way Home",
     back: "Back", next: "Next", close: "Close",
     stops: [
-      { name: "Coffee shop", x: 42, y: 140, tip: "Left on the table? Whoever finds it sees who to call." },
-      { name: "Grocery store", x: 85, y: 60, tip: "Dropped in a cart? The label tells the finder who to call." },
-      { name: "Gym", x: 140, y: 130, tip: "Forgot it on a bench? Staff can call the number on the label." },
-      { name: "Car", x: 190, y: 45, tip: "Left on the car roof? A finder knows who to call." },
-      { name: "Park", x: 235, y: 125, tip: "Slipped out of a pocket? Your trusted person gets the call." },
-      { name: "Home", x: 275, y: 40, tip: "Your phone is back home." }
+      { name: "Coffee shop", x: 42, y: 140, tip: "Left on the table? Whoever finds it sees a phone number to call to arrange its return." },
+      { name: "Grocery store", x: 85, y: 60, tip: "Dropped in a cart? The finder sees a phone number to call to arrange its return." },
+      { name: "Gym", x: 140, y: 130, tip: "Forgot it on a bench? Staff can call the number on the label to arrange its return." },
+      { name: "Car", x: 190, y: 45, tip: "Left on the car roof? The finder calls the number on the label to arrange its return." },
+      { name: "Park", x: 235, y: 125, tip: "Slipped out of a pocket? Your trusted person gets the call to arrange its return." },
+      { name: "Home", x: 275, y: 40, tip: "Your phone is back home as a result of the finder calling the number on the label." }
     ]
   },
   email: EMAIL,
