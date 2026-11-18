@@ -3,6 +3,8 @@ const EMAIL = "info@fastfindlabel.com";
 export const C = {
   brand: "Fast Find Label",
   tagline: "Your Phone's way Home",
+  // Search result description (keep under about 155 characters).
+  seoDescription: "Phone return labels with the number of someone you trust, so whoever finds your lost phone has a number to call. Waterproof, no app. From $10, USA.",
   intro: [
     "An adhesive label with the phone number of someone you trust, a relative or close friend, <strong>NOT</strong> the number of the lost phone.",
     "The label can be placed on the back of your phone or on the phone case. It is thermal printed, smear proof and waterproof."

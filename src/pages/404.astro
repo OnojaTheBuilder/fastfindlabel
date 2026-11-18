@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+import { C } from '../data/content.js';
+---
+<Base title={`Page not found · ${C.brand}`} path="/404/">
+<article class="doc">
+<h1>Page not found</h1>
+<p>Sorry, that page doesn't exist. Like a lost phone, it needs a way home.</p>
+<p><a href="/">Go to {C.brand}</a></p>
+</article>
+</Base>

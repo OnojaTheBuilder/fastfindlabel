@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://fastfindlabel.com/</loc></url><url><loc>https://fastfindlabel.com/privacy/</loc></url><url><loc>https://fastfindlabel.com/terms/</loc></url></urlset>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url><loc>https://fastfindlabel.com/</loc><lastmod>2026-11-18</lastmod></url>
+<url><loc>https://fastfindlabel.com/privacy/</loc><lastmod>2026-11-18</lastmod></url>
+<url><loc>https://fastfindlabel.com/terms/</loc><lastmod>2026-11-18</lastmod></url>
+</urlset>

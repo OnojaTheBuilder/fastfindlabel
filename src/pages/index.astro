@@ -4,11 +4,25 @@ import { C } from '../data/content.js';
 const f = C.form, m = C.map;
 const telPat = String.raw`\(\d{3}\) \d{3}-\d{4}`, zipPat = String.raw`\d{5}`, statePat = '[A-Za-z]{2}';
 const route = m.stops.map((s, i) => `${i ? 'L' : 'M'}${s.x} ${s.y}`).join(' ');
+// Structured data for Google (prices come from content.js; no ratings or reviews until real ones exist).
+const SITE = 'https://fastfindlabel.com/';
+const shipping = { '@type': 'OfferShippingDetails', shippingRate: { '@type': 'MonetaryAmount', value: C.shipping, currency: 'USD' },
+  shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'US' } };
+const returns = { '@type': 'MerchantReturnPolicy', applicableCountry: 'US', returnPolicyCategory: 'https://schema.org/MerchantReturnNotPermitted' };
+const schema = [
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: C.brand, url: SITE },
+  { '@context': 'https://schema.org', '@type': 'Organization', name: C.brand, url: SITE, email: C.email },
+  { '@context': 'https://schema.org', '@type': 'Product', name: `${C.brand} phone return labels`, brand: { '@type': 'Brand', name: C.brand },
+    description: 'Adhesive, thermal-printed, waterproof labels for the back of a phone or case, printed with the phone number of someone you trust so whoever finds a lost phone has a number to call.',
+    image: C.images.map((i) => new URL(i.src, SITE).href), url: SITE,
+    offers: C.price.map((p) => ({ '@type': 'Offer', name: `${p.q} labels`, price: p.p, priceCurrency: 'USD', availability: 'https://schema.org/InStock',
+      url: SITE, itemCondition: 'https://schema.org/NewCondition', shippingDetails: shipping, hasMerchantReturnPolicy: returns })) }
+];
 ---
-<Base>
+<Base schema={schema}>
 <header><h1>{C.brand}</h1><p class="tag"><button type="button" id="mapOpen" class="taglink" aria-haspopup="dialog">{C.tagline}</button></p></header>
 <section class="what">{C.intro.map((t) => <p set:html={t} />)}</section>
-<section class="pics">{C.images.map((i) => <img src={i.src} alt={i.alt} width={i.w} height={i.h} />)}</section>
+<section class="pics">{C.images.map((i) => <img src={i.src} alt={i.alt} width={i.w} height={i.h} decoding="async" />)}</section>
 <section id="order" class="get">
 <h2>{C.get}</h2>
 <p class="ship">{C.shipNote}<br />{C.delivery}</p>
