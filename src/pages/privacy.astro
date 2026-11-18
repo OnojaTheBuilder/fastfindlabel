@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import { C } from '../data/content.js';
+const updated = 'November 18, 2026';
+---
+<Base title={`Privacy Policy · ${C.brand}`} description="How Fast Find Label collects, uses and protects your information. We never sell your data." path="/privacy/">
+<article class="doc">
+<p class="back"><a href="/">← Back to {C.brand}</a></p>
+<h1>Privacy Policy</h1>
+<p class="meta">Last updated {updated}</p>
+<p><strong>{C.brand}</strong> (RFR FastFindLabel) is a small US business that prints and mails phone return labels. We are not a people-search site or data broker, and we never sell your information. Questions: <a href={`mailto:${C.email}`}>{C.email}</a>.</p>
+
+<h2>What we collect</h2>
+<p>Only what we need to make and mail your order:</p>
+<ul>
+<li>Your name, email address and shipping address (and the facility name, if you order as a care facility)</li>
+<li>The phone number you want printed on your label</li>
+<li>The pack you chose and the order total</li>
+</ul>
+<p>You pay on PayPal. We never see or store your card or bank details.</p>
+
+<h2>How we use it</h2>
+<ul>
+<li>To print and mail your labels</li>
+<li>To answer your questions about your order</li>
+<li>To keep basic order records for our business and tax records</li>
+</ul>
+<p><strong>The phone number you give us is used only to print your label. We never call it, text it, sell it or share it.</strong></p>
+
+<h2>Who we share it with</h2>
+<ul>
+<li><strong>PayPal</strong> receives your name, email, shipping address and the amount, to process your payment.</li>
+<li><strong>The US Postal Service</strong> sees your name and address on the envelope, to deliver it.</li>
+<li><strong>Cloudflare</strong> hosts this website and our order database, and processes data only on our behalf.</li>
+</ul>
+<p>We do not sell, rent or trade personal information to anyone.</p>
+
+<h2>Cookies</h2>
+<p>We don't use advertising or tracking cookies. PayPal may set its own cookies when you pay. The website's fonts load from Google Fonts, so Google may see your device's IP address.</p>
+
+<h2>How we protect it</h2>
+<p>The site uses a secure connection (HTTPS). Orders are kept in a protected database that only the owner can open with a password.</p>
+
+<h2>Your choices</h2>
+<p>You can ask us to show, correct or delete your information at any time. Email <a href={`mailto:${C.email}`}>{C.email}</a> and we will reply promptly.</p>
+
+<h2>Children</h2>
+<p>This site is not meant for children under 13, and we don't knowingly collect their information.</p>
+
+<h2>Changes</h2>
+<p>If this policy changes, we will update this page and the date at the top.</p>
+</article>
+</Base>

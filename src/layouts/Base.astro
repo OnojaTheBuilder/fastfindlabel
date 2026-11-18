@@ -1,15 +1,17 @@
 ---
 import '../styles/global.css';
 import { C } from '../data/content.js';
+const { title = C.brand, description = 'Adhesive, thermal-printed labels with the phone number of someone you trust, so a lost phone finds its way home.', path = '/' } = Astro.props;
+const url = `https://fastfindlabel.com${path}`;
 ---
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>{C.brand}</title>
-<meta name="description" content="Adhesive, thermal-printed labels with the phone number of someone you trust, so a lost phone finds its way home." />
-<link rel="canonical" href="https://fastfindlabel.com/" />
-<meta property="og:type" content="website" /><meta property="og:url" content="https://fastfindlabel.com/" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={url} />
+<meta property="og:type" content="website" /><meta property="og:url" content={url} />
 <meta property="og:title" content={`${C.brand} · ${C.tagline}`} />
 <meta property="og:description" content="Adhesive, thermal-printed labels with the phone number of someone you trust, so a lost phone finds its way home." />
 <meta property="og:image" content="https://fastfindlabel.com/images/phone-case.jpg" /><meta name="twitter:card" content="summary_large_image" />
@@ -20,7 +22,7 @@ import { C } from '../data/content.js';
 </head>
 <body>
 <main><slot /></main>
-<footer><div class="pol">{C.policies.map((p) => <details><summary>{p.t}</summary>{p.body.map((x) => <p>{x}</p>)}</details>)}<p class="upd">{C.policyNote}</p></div><p>Contact: <a href={`mailto:${C.email}`}>{C.email}</a></p><p>{C.foot}</p></footer>
+<footer><div class="pol">{C.policies.map((p) => <details><summary>{p.t}</summary>{p.body.map((x) => <p>{x}</p>)}</details>)}<p class="upd">{C.policyNote}</p></div><p class="legal"><a href="/privacy/">Privacy Policy</a> · <a href="/terms/">Terms, Shipping &amp; Returns</a></p>{C.about && <p class="about">{C.about}</p>}<p>Contact: <a href={`mailto:${C.email}`}>{C.email}</a></p><p>{C.foot}</p></footer>
 <script>import '../scripts/client.js';</script>
 </body>
 </html>

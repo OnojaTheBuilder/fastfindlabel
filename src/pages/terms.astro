@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import { C } from '../data/content.js';
+const pick = (t) => C.policies.find((p) => p.t === t)?.body || [];
+---
+<Base title={`Terms, Shipping & Returns · ${C.brand}`} description="Shipping, returns and terms for Fast Find Label phone return labels." path="/terms/">
+<article class="doc">
+<p class="back"><a href="/">← Back to {C.brand}</a></p>
+<h1>Terms, Shipping &amp; Returns</h1>
+<p class="meta">{C.policyNote}</p>
+<h2>Prices</h2>
+<ul>{C.price.map((p) => <li>{p.q} labels: ${p.p}, plus ${C.shipping} shipping</li>)}<li>{C.facility.note}</li></ul>
+<h2>Shipping</h2>{pick('Shipping').map((x) => <p>{x}</p>)}
+<h2>Returns and refunds</h2>{pick('Returns and refunds').map((x) => <p>{x}</p>)}
+<h2>Terms</h2>{pick('Terms').map((x) => <p>{x}</p>)}
+<h2>Privacy</h2><p>See our <a href="/privacy/">Privacy Policy</a>.</p>
+<h2>Contact</h2><p><a href={`mailto:${C.email}`}>{C.email}</a></p>
+</article>
+</Base>

@@ -54,6 +54,8 @@ export const C = {
     ]
   },
   email: EMAIL,
+  // Optional "who runs this" line in the footer. Leave empty until Bob approves the wording.
+  about: "",
   // Small fold-out notes at the bottom of the page (Returns wording approved by Bob, Nov 2026).
   policyNote: "Last updated November 2026.",
   policies: [

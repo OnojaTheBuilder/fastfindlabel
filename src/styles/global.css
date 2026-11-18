@@ -53,3 +53,7 @@ dialog text{font:600 11px 'Figtree',system-ui,sans-serif;fill:var(--ink)}
 .pol .upd{font-size:.8rem;margin-top:.5rem}
 .fac{margin:-.6rem 0 1.2rem}.fac .taglink{font-size:1rem;font-weight:700;color:var(--ink)}
 .facnote{background:var(--mint);border-radius:12px;padding:.6rem .9rem;margin:0 0 1rem;font-weight:600}
+.legal{font-weight:600}.legal a,.doc a{color:#1d4ed8;text-decoration:underline}
+.about{font-size:.9rem}
+.doc{max-width:42rem;margin:0 auto;padding:1rem 0 2rem}.doc h1{font-size:2.2rem;margin:.4rem 0}.doc h2{font-size:1.3rem;margin:1.6rem 0 .4rem}
+.doc .meta{color:var(--mut);margin:0 0 1rem}.doc ul{padding-left:1.2rem}.doc li{margin:.25rem 0}.doc .back{margin:0}
