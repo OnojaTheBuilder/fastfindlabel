@@ -1,4 +1,5 @@
 :root{--bg:#F3F8EE;--mint:#BFEBD3;--sky:#BDE0FF;--sun:#FFD84D;--ink:#13294B;--mut:#46587A}
+[hidden]{display:none!important}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 1.1rem/1.65 'Figtree',system-ui,sans-serif}
 body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(40vw 40vw at 95% 0,var(--sky),transparent 70%),radial-gradient(35vw 35vw at 0 70%,var(--mint),transparent 70%)}
