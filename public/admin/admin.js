@@ -48,7 +48,7 @@
     }
     $('#copy30').hidden = filter !== 'unprinted';
     $('#excel').href = `/api/admin/export?filter=${filter}`;
-    $('#excel').textContent = filter === 'unprinted' ? 'Download Excel (all not printed)' : 'Download Excel (this list)';
+    $('#excel').textContent = filter === 'unprinted' ? 'Download Excel: address, phone, labels (all not printed)' : 'Download Excel: address, phone, labels (this list)';
     $('#tools').hidden = !data.orders.length;
     render();
   }

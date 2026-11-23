@@ -1,6 +1,6 @@
 // GET /api/admin/export?filter=unprinted&ids=FFL-...,FFL-...  ->  Excel file for Bob's address-label app.
 import { fail, db, requireAdmin } from '../../../server/lib.js';
-import { xlsx, addressRow } from '../../../server/xlsx.js';
+import { xlsx, orderRow } from '../../../server/xlsx.js';
 import { FILTERS } from './orders.js';
 export async function onRequestGet({ request, env }) {
   const no = await requireAdmin(request, env); if (no) return no;
@@ -15,7 +15,7 @@ export async function onRequestGet({ request, env }) {
     rows = (await d.prepare(`SELECT * FROM orders WHERE ${where} ORDER BY created_at ASC`).all()).results;
   }
   if (!rows || !rows.length) return fail('No orders to export.', 404);
-  const file = xlsx(rows.map(addressRow), [26, 34, 18, 8]);
+  const file = xlsx(rows.map(orderRow), [26, 34, 18, 8, 17, 6]);
   const day = new Date().toISOString().slice(0, 10);
   return new Response(file, { headers: {
     'content-type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

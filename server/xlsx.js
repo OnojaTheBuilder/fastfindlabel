@@ -56,3 +56,5 @@ const shortUnit = (s) => clean(s).split(' ').map((w) => UNIT[w.toLowerCase()] ||
 
 // One row per order, as Bob's sample: name | street (+ unit) | "City ST" | ZIP. No facility name: carriers know the address.
 export const addressRow = (o) => [o.name, [shortStreet(o.street), shortUnit(o.apt)].filter(Boolean).join(' '), `${o.city} ${o.state}`, o.zip];
+// Excel for processing orders: the 4 address columns (unchanged, for the label app) + E phone to print + F number of labels.
+export const orderRow = (o) => [...addressRow(o), o.tel, String(o.pack_q)];
