@@ -16,7 +16,7 @@ form{display:grid;gap:1.1rem}fieldset{border:0;padding:0;margin:0;display:grid;g
 .opt{display:flex;gap:.8rem;align-items:center;padding:.9rem 1rem;border:2px solid var(--ink);border-radius:14px;background:#fff;cursor:pointer;font-weight:500}
 .opt input{width:1.3rem;height:1.3rem;accent-color:var(--ink)}.opt:has(input:checked){background:var(--sun)}
 .f{display:grid;gap:.3rem;font-weight:500}.f small{color:var(--mut);font-weight:400}
-input[type=text],input[type=email],input[type=tel]{font:inherit;width:100%;padding:.8rem 1rem;border:2px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink)}
+input[type=text],input[type=email],input[type=tel],select{font:inherit;width:100%;min-width:0;padding:.8rem 1rem;border:2px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink)}
 .g3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:.7rem}
 .total{font-size:1.3rem;margin:.4rem 0}
 .btn{font:800 1.15rem 'Fraunces',Georgia,serif;padding:1rem 1.8rem;border-radius:99px;background:var(--ink);color:#fff;border:2px solid var(--ink);cursor:pointer;justify-self:start}
@@ -29,7 +29,7 @@ footer a{color:#0b57d0;text-decoration:underline}
 .taglink{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.2em}
 .taglink:hover{color:var(--ink)}
 .ship{margin:-.6rem 0 1.4rem;font-size:.95rem;color:var(--mut)}
-.g2,.g3{align-items:end}.g2{display:grid;grid-template-columns:2fr 1fr;gap:.7rem}
+.g2{align-items:end}.g3{align-items:start}select{height:3.7rem}.g2{display:grid;grid-template-columns:2fr 1fr;gap:.7rem}
 .btn:disabled{opacity:.35;cursor:default}.btn:disabled:hover{background:var(--ink);color:#fff}
 .btn.sm{font-size:1rem;padding:.6rem 1.2rem}
 dialog{width:min(30rem,calc(100vw - 2rem));border:3px solid var(--ink);border-radius:20px;padding:1.4rem;background:var(--bg);color:var(--ink);box-shadow:6px 6px 0 var(--sun)}
