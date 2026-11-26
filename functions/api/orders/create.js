@@ -4,7 +4,7 @@ import { C } from '../../../src/data/content.js';
 
 export async function onRequestPost({ request, env }) {
   try {
-    if (await limited(env, `create:${ip(request)}`, 20, 3600)) return fail('Too many attempts. Please try again later.', 429);
+    if (await limited(env, `create:${ip(request)}`, 40, 3600)) return fail('Too many attempts. Please try again later.', 429);
     const st = await shopStatus(env);
     if (!st.open) return fail(C.pausedNote, 403);
     const body = await request.json().catch(() => null);

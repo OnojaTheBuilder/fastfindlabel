@@ -60,7 +60,7 @@
       <article class="order${o.status === 'check' ? ' check' : ''}" data-id="${esc(o.id)}">
         <div class="row spread"><span><span class="pack">${o.pack_q} labels</span>${o.facility ? ' <span class="fac">Care facility</span>' : ''}</span><span class="status">${esc(label(o.status))}</span></div>
         <div class="tel">${esc(o.tel)}</div>
-        ${o.status === 'check' ? '<p class="warn">Payment amount did not match. Check this payment in PayPal before shipping.</p>' : ''}
+        ${o.status === 'check' ? '<p class="warn">PayPal flagged this payment (amount mismatch or still pending). Check it in PayPal before shipping.</p>' : ''}
         <div class="addr"><strong>${esc(o.name)}</strong><br>${o.facility ? `${esc(o.facility)}<br>` : ''}${esc([o.street, o.apt].filter(Boolean).join(' '))}<br>${esc(o.city)} ${esc(o.state)} ${esc(o.zip)}</div>
         <div class="meta">${esc(o.email)} · ${money(o.total)} · ${when(o.paid_at || o.created_at)} · ${esc(o.id)}</div>
         <div class="row" style="margin-top:.6rem">${actions(o)}</div>

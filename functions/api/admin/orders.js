@@ -1,6 +1,6 @@
 // GET  /api/admin/orders?filter=unprinted|printed|shipped|check|all   -> paid orders (newest first)
 // POST /api/admin/orders {ids:[...], status:"printed"|"shipped"|"paid"|"refunded"}
-import { json, fail, db, requireAdmin, getSettings, paidToday } from '../../../server/lib.js';
+import { json, fail, db, requireAdmin, getSettings, paidToday, reconcile } from '../../../server/lib.js';
 export const FILTERS = {
   unprinted: "status = 'paid'", printed: "status = 'printed'", shipped: "status = 'shipped'",
   check: "status = 'check'", refunded: "status = 'refunded'", all: "status != 'pending'"
@@ -10,6 +10,7 @@ export async function onRequestGet({ request, env }) {
   const f = new URL(request.url).searchParams.get('filter') || 'unprinted';
   const where = FILTERS[f] || FILTERS.unprinted;
   const d = await db(env);
+  try { await reconcile(env); } catch (e) { console.log('reconcile failed', e && e.message); }
   const { results } = await d.prepare(`SELECT * FROM orders WHERE ${where} ORDER BY created_at DESC LIMIT 1000`).all();
   const counts = {};
   for (const [k, w] of Object.entries(FILTERS)) counts[k] = (await d.prepare(`SELECT COUNT(*) AS n FROM orders WHERE ${w}`).first()).n;

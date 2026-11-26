@@ -87,7 +87,8 @@ export function validateOrder(b) {
   const str = (v, max) => String(v ?? '').replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max);
   const pack = Number.parseInt(b.pack, 10);
   if (!(pack >= 0 && pack < PACKS.length)) return { error: 'Please choose a pack.' };
-  const digits = String(b.tel ?? '').replace(/\D/g, '');
+  let digits = String(b.tel ?? '').replace(/\D/g, '');
+  if (digits.length === 11 && digits[0] === '1') digits = digits.slice(1); // +1 country code
   if (digits.length !== 10 || /^[01]/.test(digits)) return { error: 'Please enter a 10-digit US phone number to print.' };
   const facility = b.facility === '1' || b.facility === true;
   const o = {
@@ -98,7 +99,7 @@ export function validateOrder(b) {
     tel: `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`,
     name: str(b.name, 80), email: str(b.email, 120).toLowerCase(),
     street: str(b.street, 100), apt: str(b.apt, 40), city: str(b.city, 60),
-    state: str(b.state, 2).toUpperCase(), zip: str(b.zip, 5)
+    state: str(b.state, 2).toUpperCase(), zip: (String(b.zip ?? '').trim().match(/^(\d{5})(?:-?\d{4})?$/) || [])[1] || ''
   };
   if (o.name.length < 2) return { error: 'Please enter your name.' };
   if (facility && o.facility.length < 2) return { error: 'Please enter the facility name.' };
@@ -134,6 +135,35 @@ export async function paypal(env, path, body, requestId) {
   const r = await fetch(`${ppBase(env)}${path}`, { method: 'POST', headers, body: body ? JSON.stringify(body) : undefined });
   const data = await r.json().catch(() => ({}));
   return { status: r.status, ok: r.ok, data };
+}
+
+export async function paypalGet(env, path) {
+  const token = await ppToken(env);
+  const r = await fetch(`${ppBase(env)}${path}`, { headers: { authorization: `Bearer ${token}` } });
+  return { status: r.status, ok: r.ok, data: await r.json().catch(() => ({})) };
+}
+
+// Recover paid orders whose confirmation never reached our database (lost connection, server hiccup).
+// Checks up to 10 pending orders aged 10 minutes to 3 days with PayPal and marks them paid (or 'check').
+export async function reconcile(env) {
+  const d = await db(env);
+  const now = Date.now();
+  const { results } = await d.prepare("SELECT * FROM orders WHERE status = 'pending' AND created_at < ? AND created_at > ? ORDER BY created_at DESC LIMIT 10")
+    .bind(new Date(now - 10 * 60e3).toISOString(), new Date(now - 3 * 864e5).toISOString()).all();
+  let fixed = 0;
+  for (const o of results || []) {
+    try {
+      const r = await paypalGet(env, `/v2/checkout/orders/${o.paypal_order_id}`);
+      const cap = r.data?.purchase_units?.[0]?.payments?.captures?.[0];
+      if (!r.ok || r.data.status !== 'COMPLETED' || !cap) continue;
+      const good = cap.status === 'COMPLETED' && cap.amount?.currency_code === 'USD' && Math.abs(Number(cap.amount?.value) - o.total) < 0.001;
+      const when = cap.create_time ? new Date(cap.create_time) : new Date();
+      await d.prepare("UPDATE orders SET status = ?, paid_at = ?, day = ?, capture_id = ? WHERE id = ? AND status = 'pending'")
+        .bind(good ? 'paid' : 'check', when.toISOString(), today(when), cap.id, o.id).run();
+      fixed++;
+    } catch (e) { console.log('reconcile error', o.id, e && e.message); }
+  }
+  return fixed;
 }
 
 // ---- Admin session (signed cookie) ----

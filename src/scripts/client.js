@@ -6,7 +6,7 @@ const fill = (t, o) => t.replace(/\{(\w+)\}/g, (_, k) => o[k] ?? '');
 const f = $('#of');
 if (f) {
   const tn = $('#tn'), tot = $('#tot'), done = $('#done'), btn = f.querySelector('button[type=submit]'), pp = $('#pp');
-  const fmt = (v) => { const d = v.replace(/\D/g, '').slice(0, 10); return d.length > 6 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : d.length > 3 ? `(${d.slice(0, 3)}) ${d.slice(3)}` : d; };
+  const fmt = (v) => { let d = v.replace(/\D/g, ''); if (d.length > 10 && d[0] === '1') d = d.slice(1); d = d.slice(0, 10); return d.length > 6 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : d.length > 3 ? `(${d.slice(0, 3)}) ${d.slice(3)}` : d; };
   const pk = () => C.price[+f.pack.value];
   let fac = false;
   const ship = () => (fac ? 0 : C.shipping);
@@ -52,6 +52,7 @@ if (f) {
       onClick: (_, a) => (f.reportValidity() ? a.resolve() : a.reject()),
       createOrder: () => post('/api/orders/create', data()).then((j) => j.id).catch((e) => { say(e.message); throw e; }),
       onApprove: (d, a) => post('/api/orders/capture', { orderID: d.orderID })
+        .catch((e) => (e instanceof TypeError ? new Promise((r) => setTimeout(r, 2000)).then(() => post('/api/orders/capture', { orderID: d.orderID })) : Promise.reject(e)))
         .then((j) => { f.hidden = true; say(fill(C.form.thanks, { name: j.order.name, q: j.order.q, tel: j.order.tel, total: j.order.total })); })
         .catch((e) => { if (e.retry) return a.restart(); say(e.message); }),
       onCancel: () => say(C.form.cancelled),

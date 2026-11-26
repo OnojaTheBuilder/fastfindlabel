@@ -26,6 +26,11 @@ export async function onRequestPost({ request, env }) {
       console.log('amount mismatch', o.id, amount, cur, o.total);
       return fail('We received your payment but need to check it. We will email you shortly.', 409);
     }
+    if (cap.status && cap.status !== 'COMPLETED') { // e.g. PENDING review: money not settled yet
+      await d.prepare("UPDATE orders SET status = 'check', capture_id = ? WHERE id = ? AND status = 'pending'").bind(cap.id, o.id).run();
+      console.log('capture not completed', o.id, cap.status);
+      return json({ ok: true, order: pub({ ...o, status: 'check' }) });
+    }
     const now = new Date();
     await d.prepare("UPDATE orders SET status = 'paid', paid_at = ?, day = ?, capture_id = ? WHERE id = ? AND status = 'pending'")
       .bind(now.toISOString(), today(now), cap.id, o.id).run();
